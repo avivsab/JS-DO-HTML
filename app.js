@@ -35,21 +35,32 @@ foodBtn.onclick = (e) => getImages(e);
 musicBtn.onclick = (e) => getImages(e);
 
 
-function loadInitialRandomImg(genre) {
+function loadImages(genre) {
     let URL = '';
     if (genre) URL = `https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6&q=${genre}`;
-    
-    else URL = 'https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6';  
-    
+
+    else URL = 'https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6';
+
+    if (document.body.classList.contains('manual-buttons')) {
+        const smallMsg = document.createElement('small');
+        smallMsg.innerHTML = 'Refreshing Collection';
+        smallMsg.style.color = 'red';
+        smallMsg.style.opacity = 0.5
+        app.append(smallMsg);
+        document.body.classList.remove('manual-buttons');
+        setTimeout(() => {
+            smallMsg.style.display = 'none';
+        }, 2000);
+    }
     fetch(URL).then(res => res.json().then(data => {
-        imgContainer.innerHTML = '';
-        const img = document.createElement('img');
+            imgContainer.innerHTML = '';
+            const img = document.createElement('img');
             img.classList.add('main-image');
             imgContainer.append(img);
 
             const figcaption = document.createElement('figcaption');
-            if(document.getElementsByTagName(figcaption)[0]) figcaption = '';
-            figcaption.innerText = genre ? `${genre} collection` :  'random collection';
+            if (document.getElementsByTagName(figcaption)[0]) figcaption = '';
+            figcaption.innerText = genre ? `${genre} collection` : 'random collection';
             imgContainer.append(figcaption);
 
 
@@ -59,23 +70,23 @@ function loadInitialRandomImg(genre) {
             const int = setInterval(() => {
                 i++;
 
-                if (i===imagesArr.length-1) {
+                if (i === imagesArr.length - 1) {
                     clearInterval(int);
-                    if(genre) loadInitialRandomImg(genre);
-                } 
+                    if (genre) loadImages(genre);
+                }
 
                 imgSrc = imagesArr[i].largeImageURL
                 img.src = imgSrc;
                 img.alt = 'main-picture';
                 img.title = 'stop on image';
-                img.addEventListener('click', ()=> {
+                img.addEventListener('click', () => {
                     clearInterval(int);
                 })
-               
             }, 1500);
-    }))
-    .catch(e => console.error(e))
+        }))
+        .catch(e => console.error(e))
 }
+
 function getImages(e) {
     const currentGenre = e.target.innerText;
     const URL = 'https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6';
@@ -100,20 +111,22 @@ function getImages(e) {
             const imgArrLength = imagesArr.length;
             let imageIndex = 0;
             const interval = setInterval(() => {
-                imageIndex +=1
-                if (imageIndex === imgArrLength-1) {
+                imageIndex += 1
+                if (imageIndex === imgArrLength - 1) {
                     clearInterval(interval)
-                    loadInitialRandomImg(currentGenre);
+                    loadImages(currentGenre);
                 }
                 imgSrc = imagesArr[imageIndex].largeImageURL;
                 img.src = imgSrc;
-                img.addEventListener('click', ()=> {
+                img.addEventListener('click', () => {
                     clearInterval(interval);
                 })
             }, 1500);
 
+            markActiveBtn(currentGenre);
+
             const rightBtn = document.createElement('button');
-            rightBtn.innerText = '>';           
+            rightBtn.innerText = '>';
             rightBtn.classList.add('right-btn')
             rightBtn.title = 'Manual Forword';
             imgContainer.appendChild(rightBtn);
@@ -123,6 +136,8 @@ function getImages(e) {
             leftBtn.classList.add('left-btn');
             leftBtn.title = 'Manual Back';
             imgContainer.appendChild(leftBtn);
+
+            document.body.classList.add('manual-buttons')
 
             leftBtn.onclick = () => manualLeftMove(interval, imagesArr)
             rightBtn.onclick = () => manualRightMove(interval, imagesArr)
@@ -142,8 +157,29 @@ function getImages(e) {
                 if (imageIndex >= arr.length - 1) imageIndex = 0;
                 imgSrc = arr[imageIndex].largeImageURL;
                 img.src = imgSrc;
-            }          
+            }
         })
-        .catch (e => console.warn(e));
+        .catch(e => console.warn(e));
 }
-loadInitialRandomImg()
+
+function markActiveBtn(genre) {
+    const genrebuttons = document.querySelectorAll("button");
+    for (const current of genrebuttons) {
+        current.classList.remove('active-genre');
+    }
+    switch (genre) {
+        case 'sport':
+            genrebuttons[0].classList.add('active-genre')
+            break;
+        case 'food':
+            genrebuttons[1].classList.add('active-genre')
+            break;
+        case 'music':
+            genrebuttons[2].classList.add('active-genre')
+            break;
+        default:
+            undefined
+            break;
+    }
+}
+loadImages()
