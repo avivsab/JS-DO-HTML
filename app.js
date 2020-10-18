@@ -34,12 +34,18 @@ sportBtn.onclick = (e) => getImages(e);
 foodBtn.onclick = (e) => getImages(e);
 musicBtn.onclick = (e) => getImages(e);
 
+const timers = [];
 
-function loadImages(genre) {
+function loadImages(genre, currInterval) {
     let URL = '';
     if (genre) URL = `https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6&q=${genre}`;
 
     else URL = 'https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6';
+
+    if (currInterval) timers.push(currInterval)
+    for (let i = 0; i < timers.length; i++) {
+        clearTimeout(timers[i]);
+    }
 
     if (document.body.classList.contains('manual-buttons')) {
         const smallMsg = document.createElement('small');
@@ -72,7 +78,7 @@ function loadImages(genre) {
 
                 if (i === imagesArr.length - 1) {
                     clearInterval(int);
-                    if (genre) loadImages(genre);
+                    if (genre) loadImages(genre, int);
                 }
 
                 imgSrc = imagesArr[i].largeImageURL
@@ -83,11 +89,16 @@ function loadImages(genre) {
                     clearInterval(int);
                 })
             }, 1500);
+            timers.push(int)
         }))
         .catch(e => console.error(e))
 }
 
 function getImages(e) {
+    for (let i = 0; i < timers.length; i++) {
+        clearTimeout(timers[i]);
+    }
+
     const currentGenre = e.target.innerText;
     const URL = 'https://pixabay.com/api/?key=14910698-da2d9192ee156a4fb851cc1c6';
     const imgRequest = `&q=${currentGenre}`;
@@ -114,7 +125,7 @@ function getImages(e) {
                 imageIndex += 1
                 if (imageIndex === imgArrLength - 1) {
                     clearInterval(interval)
-                    loadImages(currentGenre);
+                    loadImages(currentGenre, interval);
                 }
                 imgSrc = imagesArr[imageIndex].largeImageURL;
                 img.src = imgSrc;
@@ -122,7 +133,7 @@ function getImages(e) {
                     clearInterval(interval);
                 })
             }, 1500);
-
+            timers.push(interval);
             markActiveBtn(currentGenre);
 
             const rightBtn = document.createElement('button');
