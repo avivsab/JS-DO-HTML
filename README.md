@@ -2,10 +2,12 @@
 
 Sample on https://avivsab.github.io/JavaScript-Rendering-HTML/
 
-Using the DOM API directly is much faster then changing HTML, 
-it does not have to invoke the HTML parser and to rerender all the elements/tags contents.
+## JavaScript creating all page elements with the createElement method indise one root element.
 
-The page has container for images comming from external API with fetch. 
-JavaScript creating all page elements with the createElement method indise one root element.
+>Using the DOM API directly is much faster then changing HTML, 
+>it does not have to invoke the HTML parser 
+>and to rerender all the elements/tags contents.
+
+Fetch API getting images from external API for a container changing image every few seconds.
 
 
