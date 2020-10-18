@@ -1,9 +1,9 @@
 # JavaScript-Rendering-HTML
 
-### *Sample on :earth_americas: https://avivsab.github.io/JavaScript-Rendering-HTML/ :earth_americas: *
+##### Sample on :earth_americas: https://avivsab.github.io/JavaScript-Rendering-HTML/ 
 
 JavaScript creating all page elements with the createElement method
-indise one root element. :metal:
+indise one root element.
 
 
 
