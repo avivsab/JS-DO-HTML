@@ -5,6 +5,11 @@ h1.setAttribute('class', 'gallary-headline');
 h1.innerText = 'choose gallery';
 app.appendChild(h1);
 
+const modeMsg = document.createElement('span');
+modeMsg.classList.add('manual-message');
+modeMsg.innerText = 'Manual Mode';
+app.appendChild(modeMsg);
+
 const buttonsDiv = document.createElement('div');
 buttonsDiv.classList.add('btns-container');
 app.appendChild(buttonsDiv);
@@ -59,38 +64,38 @@ function loadImages(genre, currInterval) {
         }, 2000);
     }
     fetch(URL).then(res => res.json().then(data => {
-            imgContainer.innerHTML = '';
-            const img = document.createElement('img');
-            img.classList.add('main-image');
-            imgContainer.append(img);
+        imgContainer.innerHTML = '';
+        const img = document.createElement('img');
+        img.classList.add('main-image');
+        imgContainer.append(img);
 
-            const figcaption = document.createElement('figcaption');
-            if (document.getElementsByTagName(figcaption)[0]) figcaption = '';
-            figcaption.innerText = genre ? `${genre} collection` : 'random collection';
-            imgContainer.append(figcaption);
+        const figcaption = document.createElement('figcaption');
+        if (document.getElementsByTagName(figcaption)[0]) figcaption = '';
+        figcaption.innerText = genre ? `${genre} collection` : 'random collection';
+        imgContainer.append(figcaption);
 
 
-            const imagesArr = data.hits;
-            let imgSrc = imagesArr[0].largeImageURL;
-            let i = 0;
-            const int = setInterval(() => {
-                i++;
+        const imagesArr = data.hits;
+        let imgSrc = imagesArr[0].largeImageURL;
+        let i = 0;
+        const int = setInterval(() => {
+            i++;
 
-                if (i === imagesArr.length - 1) {
-                    clearInterval(int);
-                    if (genre) loadImages(genre, int);
-                }
+            if (i === imagesArr.length - 1) {
+                clearInterval(int);
+                if (genre) loadImages(genre, int);
+            }
 
-                imgSrc = imagesArr[i].largeImageURL
-                img.src = imgSrc;
-                img.alt = 'main-picture';
-                img.title = 'stop on image';
-                img.addEventListener('click', () => {
-                    clearInterval(int);
-                })
-            }, 1500);
-            timers.push(int)
-        }))
+            imgSrc = imagesArr[i].largeImageURL
+            img.src = imgSrc;
+            img.alt = 'main-picture';
+            img.title = 'stop on image';
+            img.addEventListener('click', () => {
+                clearInterval(int);
+            })
+        }, 1500);
+        timers.push(int)
+    }))
         .catch(e => console.error(e))
 }
 
@@ -148,7 +153,8 @@ function getImages(e) {
             leftBtn.title = 'Manual Back';
             imgContainer.appendChild(leftBtn);
 
-            document.body.classList.add('manual-buttons')
+            document.body.classList.add('manual-buttons');
+            modeMsg.style.display = 'none';
 
             leftBtn.onclick = () => manualLeftMove(interval, imagesArr)
             rightBtn.onclick = () => manualRightMove(interval, imagesArr)
@@ -160,6 +166,7 @@ function getImages(e) {
                 imgSrc = arr[imageIndex].largeImageURL;
                 img.src = imgSrc;
                 img.title = 'stop on image';
+                modeMsg.style.display = 'block';
             }
 
             function manualRightMove(int, arr) {
@@ -168,6 +175,7 @@ function getImages(e) {
                 if (imageIndex >= arr.length - 1) imageIndex = 0;
                 imgSrc = arr[imageIndex].largeImageURL;
                 img.src = imgSrc;
+                modeMsg.style.display = 'block';
             }
         })
         .catch(e => console.warn(e));
@@ -193,4 +201,35 @@ function markActiveBtn(genre) {
             break;
     }
 }
-loadImages()
+loadImages();
+
+const reload = document.createElement('button');
+reload.title = 'Reload Page';
+reload.innerHTML = '&#128225;';
+reload.classList.add('reload-button');
+app.appendChild(reload);
+reload.addEventListener('mouseenter', descriptionIn);
+reload.addEventListener('mouseout', descriptionOut);
+reload.addEventListener('click', refreshPage)
+
+
+function descriptionIn() {
+    const decriptionEl = document.getElementById('satellite');
+    if (decriptionEl) {
+        decriptionEl.style.display = 'block';
+        return;
+    }
+    const description = document.createElement('div');
+    description.innerText = 'Click to reload the page';
+    description.id = 'satellite';
+    app.appendChild(description);
+}
+
+function descriptionOut() {
+    const decription = document.getElementById('satellite');
+    decription.style.display = 'none';
+}
+
+function refreshPage() {
+    location.reload();
+}
