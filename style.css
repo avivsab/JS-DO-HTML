@@ -74,6 +74,7 @@ h1 {
     width: 500px;
     height: 300px;
     border-radius: 8px;
+    box-shadow: 1px 3px 5px darkslategrey;
 }
 
 figcaption {
@@ -84,6 +85,10 @@ figcaption {
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
+}
+
+figcaption span {
+    color: mediumvioletred;
 }
 
 .right-btn {

@@ -66,12 +66,13 @@ function loadImages(genre, currInterval) {
     fetch(URL).then(res => res.json().then(data => {
         imgContainer.innerHTML = '';
         const img = document.createElement('img');
+        img.src = './initial-sun.png';
         img.classList.add('main-image');
         imgContainer.append(img);
 
         const figcaption = document.createElement('figcaption');
         if (document.getElementsByTagName(figcaption)[0]) figcaption = '';
-        figcaption.innerText = genre ? `${genre} collection` : 'random collection';
+        figcaption.innerHTML = genre ? `<span>${genre}</span> collection` : 'random collection';
         imgContainer.append(figcaption);
 
 
@@ -92,6 +93,7 @@ function loadImages(genre, currInterval) {
             img.title = 'stop on image';
             img.addEventListener('click', () => {
                 clearInterval(int);
+                modeMsg.style.display = 'block';
             })
         }, 1500);
         timers.push(int)
@@ -121,7 +123,7 @@ function getImages(e) {
             img.alt = 'main-picture';
 
             const figcaption = document.createElement('figcaption');
-            figcaption.innerText = `${currentGenre} collection`;
+            figcaption.innerHTML = `<span>${currentGenre}</span> collection`;
             imgContainer.append(figcaption);
 
             const imgArrLength = imagesArr.length;
@@ -136,6 +138,7 @@ function getImages(e) {
                 img.src = imgSrc;
                 img.addEventListener('click', () => {
                     clearInterval(interval);
+                    modeMsg.style.display = 'block';
                 })
             }, 1500);
             timers.push(interval);
