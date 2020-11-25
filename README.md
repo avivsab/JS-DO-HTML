@@ -1,6 +1,6 @@
 # JavaScript-Rendering-HTML
 
-##### Sample on :earth_americas: https://avivsab.github.io/JavaScript-Rendering-HTML/ 
+##### Sample on :earth_americas: https://avivsab.github.io/JS-DO-HTML/ 
 
 JavaScript creating all page elements with the createElement method
 indise one root element.
